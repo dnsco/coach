@@ -90,3 +90,4 @@ tests:
       - -with-rtsopts=-N
     dependencies:
       - coach
+      - hspec
