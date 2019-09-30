@@ -1,6 +1,23 @@
 module Lib
-  ( someFunc
+  (
+   fetchAndParse
   ) where
 
-someFunc :: IO ()
-someFunc = putStrLn "someFunc"
+import Control.Lens
+import Data.ByteString.Lazy.Char8 as Char8
+import Data.Either
+import Network.Wreq
+import Text.CSV
+import Control.Arrow (left)
+
+fetchAndParse :: String -> IO (Either String CSV)
+fetchAndParse url = left show <$> result
+  where
+    parser = parseCSV url
+    result = parser <$> fetchUrl url
+
+fetchUrl :: String -> IO String
+fetchUrl url = rBody <$> get url
+
+rBody :: Response ByteString -> String
+rBody r = Char8.unpack $ r ^. responseBody
