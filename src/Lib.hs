@@ -5,7 +5,6 @@ module Lib
 import           Control.Arrow              (left)
 import           Control.Lens
 import           Data.ByteString.Lazy.Char8 as Char8
-import           Data.Either
 import           Network.Wreq
 import           Text.CSV
 
