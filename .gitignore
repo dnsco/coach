@@ -3,3 +3,4 @@
 .env
 .stack-work/
 coach.cabal
+coach.iml
