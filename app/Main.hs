@@ -8,5 +8,5 @@ main = csv >>= print
     csv = url >>= fetchAndParse
 
 errorIfBlank :: Maybe String -> String
-errorIfBlank Nothing = error "set env SHEET_URL"
+errorIfBlank Nothing  = error "set env SHEET_URL"
 errorIfBlank (Just s) = s

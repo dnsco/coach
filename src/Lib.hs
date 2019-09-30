@@ -1,14 +1,13 @@
 module Lib
-  (
-   fetchAndParse
+  ( fetchAndParse
   ) where
 
-import Control.Lens
-import Data.ByteString.Lazy.Char8 as Char8
-import Data.Either
-import Network.Wreq
-import Text.CSV
-import Control.Arrow (left)
+import           Control.Arrow              (left)
+import           Control.Lens
+import           Data.ByteString.Lazy.Char8 as Char8
+import           Data.Either
+import           Network.Wreq
+import           Text.CSV
 
 fetchAndParse :: String -> IO (Either String CSV)
 fetchAndParse url = left show <$> result
