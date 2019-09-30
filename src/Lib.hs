@@ -10,7 +10,6 @@ import           Network.Wreq
 import           Text.CSV
 import           Text.Parsec.Error          (ParseError)
 
-
 type Activity = (Person, ActivityName, [Event])
 
 type CSVResult = Either ParseError [Activity]
@@ -34,16 +33,12 @@ processRows parser s = pure process <*> parsed
     parsed = parser s
 
 process :: CSV -> [Activity]
-process rows = catMaybes (processRow <$> activities)
+process rows = processRow . addDates <$> [r | r <- tail rows, not (null (head r))]
   where
-    activities = zip (head rows) <$> tail rows
+    addDates = zip (head rows)
 
-processRow :: [(Field, Field)] -> Maybe Activity
-processRow ((_, whom):(_, wat):acts) =
-  if not (null whom)
-    then Just (whom, wat, [a | a <- acts, not (null (snd a))])
-    else Nothing
-processRow _ = Nothing
+processRow :: [(Field, Field)] -> Activity
+processRow ((_, whom):(_, wat):acts) = (whom, wat, [a | a <- acts, not (null (snd a))])
 
 fetchUrl :: String -> IO String
 fetchUrl url = rBody <$> get url
