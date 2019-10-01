@@ -1,20 +1,19 @@
 module Lib
-  ( fetchAndParse
+  ( parseCsvAt
   , processRows
   ) where
 
 import           Control.Lens
 import qualified Data.ByteString.Lazy.Char8 as Char8 (ByteString, unpack)
+import           Data.Map                   as Map (Map, fromList)
 import           Network.Wreq
 import           Text.CSV
 import           Text.Parsec.Error          (ParseError)
 
-type Activity = (Person, ActivityName, [Event])
-
 type CSVResult = Either ParseError ParsedCSV
 
-fetchAndParse :: String -> IO CSVResult
-fetchAndParse url = parser <$> fetchUrl url
+parseCsvAt :: String -> IO CSVResult
+parseCsvAt url = parser <$> fetchUrl url
   where
     parser = processRows (parseCSV url)
 
@@ -23,11 +22,12 @@ processRows parser s = pure process <*> parsed
   where
     parsed = parser s
 
-type ParsedCSV = [Activity]
+type Activity = (ActivityName, [Event])
+
+type ParsedCSV = Map Person [Activity]
 
 process :: CSV -> ParsedCSV
-process rows =
-  [(p, a, completedEvents es) | (p:a:es) <- tail rows, not (null p)]
+process rows = Map.fromList [(p, [(a, completedEvents es)]) | (p:a:es) <- tail rows, not (null p)]
   where
     completedEvents es = [e | e <- zip dates es, not (null (snd e))]
     dates = drop 2 (head rows)
