@@ -1,6 +1,7 @@
 module Lib
   ( parseCsvAt
   , processRows
+  , parseAndProcess
   , ParsedCSV
   , Activity
   ) where
@@ -16,9 +17,10 @@ import           Text.CSV
 import           Text.Parsec.Error          (ParseError)
 
 parseCsvAt :: String -> IO (Either ParseError ParsedCSV)
-parseCsvAt url = fetchUrl url <&> parser
-  where
-    parser s = processRows <$> parseCSV url s
+parseCsvAt url = fetchUrl url <&> parseAndProcess url
+
+parseAndProcess :: String -> String -> Either ParseError ParsedCSV
+parseAndProcess url s = processRows <$> parseCSV url s
 
 type Activity = (ActivityName, [Event])
 

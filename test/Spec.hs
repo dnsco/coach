@@ -12,21 +12,28 @@ import           Text.CSV     as CSV (parseCSV)
 main :: IO ()
 main =
   hspec $ do
-    describe "FetchAndParse" $ do
+    describe "Paring a csv" $ do
+      let csv = trim (unlines rows)
+          csvData = rightToMaybe (CSV.parseCSV "www.anunittest.com" csv)
+          processed = rightToMaybe (parseAndProcess "/test/file/fake.csv" csv)
       it "seperates the people from the header" $ do
-        (csvData <&> length) `shouldBe` (Just 2 :: Maybe Int)
-        Map.size <$> processed `shouldBe` (Just 1 :: Maybe Int)
-      it "parse people's data" $ do
-        Map.member "ben" people' `shouldBe` True
-        fst (head (getPerson' "ben")) `shouldBe` "fishing"
+        let csvRowCount = csvData <&> length
+            mapEntryCount = Map.size <$> processed
+        (>) <$> csvRowCount <*> mapEntryCount `shouldBe` Just True
+        mapEntryCount `shouldBe` (Just 2 :: Maybe Int)
+      context "Formatting people" $ do
+        let people' = fromJust processed
+            getPerson' s = fromJust (Map.lookup s people')
+        it "parse people's data" $ do
+          Map.member "ben" people' `shouldBe` True
+          fst (head (getPerson' "ben")) `shouldBe` "fishing"
   where
     rows =
-      [",,8/13/2087,8/14/2087,8/15/2087", "ben,fishing,x,x,THIIIISSSS BIGGGG"]
-    csv' = trim (unlines rows)
-    csvData = rightToMaybe (CSV.parseCSV "www.anunittest.com" csv')
-    processed = processRows <$> csvData
-    people' = fromJust processed
-    getPerson' s = fromJust (Map.lookup s people')
+      [ ",,8/13/2087,8/14/2087,8/15/2087"
+      , "ben,xylophon,x,,8Mile"
+      , "michaela,raging"
+      , "ben,fishing,x,x,THIIIISSSS BIGGGG"
+      ]
 
 rightToMaybe :: Either a b -> Maybe b
 rightToMaybe = either (const Nothing) Just
