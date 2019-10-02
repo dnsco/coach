@@ -6,7 +6,7 @@ import           System.Environment
 main :: IO ()
 main = do
   p <- parsed
-  print (delinquents (fromJust (parseDate "10/1/2019")) <$> p)
+  print (delinquents (fromJust (parseDate "10/2/2019")) <$> p)
   where
     url = errorIfBlank <$> lookupEnv "SHEET_URL"
     parsed = url >>= parseCsvAt
