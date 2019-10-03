@@ -1,7 +1,7 @@
+import           Control.Monad.IO.Class
 import           Data.Hourglass
-import           Data.Monoid        (mconcat)
-import           Data.String        (fromString)
-import           Data.Text.Lazy     (Text)
+import           Data.Monoid            (mconcat)
+import           Data.String            (fromString)
 import           Lib
 import           System.Environment
 import           System.Hourglass
@@ -11,6 +11,9 @@ main :: IO ()
 main = do
   port <- getEnv "PORT"
   sheetUrl <- getEnv "SHEET_URL"
-  currentDate <- dtDate . localTimeUnwrap <$> localDateCurrent
-  people <- parseCsvAt sheetUrl
-  scotty (read port) $ do get "/" $ do html $ mconcat [fromString (show (delinquents currentDate <$> people)) :: Text]
+  scotty (read port) $ do
+    get "/" $ do
+      people <- liftIO $ parseCsvAt sheetUrl
+      currentDate <- liftIO $ dtDate . localTimeUnwrap <$> localDateCurrent
+      let ds = delinquents currentDate <$> people
+      html $ mconcat [fromString $ show ds]
