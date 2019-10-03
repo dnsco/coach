@@ -64,7 +64,9 @@ dependencies:
   - hourglass
   - lens
   - parsec
+  - scotty
   - split
+  - text
   - wreq
 
 ghc-options: "-Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints"
