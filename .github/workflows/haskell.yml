@@ -8,8 +8,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses:  mstksg/setup-stack@master
-    - name: Build
+    - name: Toolchain
+      uses:  mstksg/setup-stack@master
+      run: stack --version
+    - name: build
       run: stack build
     - name: Run tests
       run: stack test
