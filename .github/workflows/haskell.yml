@@ -1,0 +1,15 @@
+name: Haskell CI
+
+on: [push]
+
+jobs:
+  build:
+   
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses:  mstksg/setup-stack@master
+    - name: Build
+      run: stack build
+    - name: Run tests
+      run: stack test
