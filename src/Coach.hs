@@ -5,6 +5,7 @@ module Coach
   , delinquents
   , Activity
   , CSVResult
+  , Delinquents
   , PeopleData
   ) where
 
@@ -31,7 +32,9 @@ parseActivities rows = [(p, (a, fes es)) | (p:a:es) <- tail rows, not (null p)]
     fes :: [String] -> [Event]
     fes es = [e | e <- zip ds es, not (null (snd e))]
 
-delinquents :: Date -> PeopleData -> [(Person, [ActivityName])]
+type Delinquents = [(Person, [ActivityName])]
+
+delinquents :: Date -> PeopleData -> Delinquents
 delinquents d =
   Map.foldrWithKey
     (\k as ps ->

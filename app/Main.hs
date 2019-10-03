@@ -1,3 +1,4 @@
+import           Coach.Web              (dqsResponse)
 import           Control.Monad.IO.Class
 import           Data.Hourglass
 import           Data.Monoid            (mconcat)
@@ -15,5 +16,5 @@ main = do
     get "/" $ do
       people <- liftIO $ parseCsvAt sheetUrl
       currentDate <- liftIO $ dtDate . localTimeUnwrap <$> localDateCurrent
-      let ds = delinquents currentDate <$> people
-      html $ mconcat [fromString $ show ds]
+      let res = dqsResponse currentDate people
+      html $ mconcat [fromString res]

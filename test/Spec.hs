@@ -54,6 +54,8 @@ main =
 rightToMaybe :: Either a b -> Maybe b
 rightToMaybe = either (const Nothing) Just
 
-parseCsv' :: String -> PeopleData
+type CoachCSVParser = String -> PeopleData
+
+parseCsv' :: CoachCSVParser
 parseCsv' csvStr =
   fromJust (rightToMaybe (parseAndProcess "/test/file/fake.csv" csvStr))
