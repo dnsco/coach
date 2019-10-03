@@ -1,4 +1,3 @@
-
 import           Data.Hourglass
 import           Lib
 import           System.Environment

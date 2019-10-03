@@ -36,7 +36,6 @@ main =
         ds `shouldBe` [("michaela", ["raging"]), ("ben", ["xylophon"])]
       it "groups people's failed activities" $ do
         let ds = findDelinquents august16
-        False `shouldBe` True
         ds `shouldBe`
           [("michaela", ["raging"]), ("ben", ["fishing", "xylophon"])]
   where
