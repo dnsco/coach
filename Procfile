@@ -1,1 +1,1 @@
-cmd: coach-exe
+web: coach-exe
