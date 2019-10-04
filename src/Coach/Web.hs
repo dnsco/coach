@@ -1,7 +1,9 @@
 module Coach.Web where
 
-import           Coach
-import           Data.Hourglass (DateTime)
+import           Data.Hourglass   (DateTime)
+
+import           Coach.Parsing
+import           Coach.Structures
 
 dqsResponse :: Show e => DateTime -> Either e PeopleData -> String
 dqsResponse n (Right p) = showDqs $ delinquents n p

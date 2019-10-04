@@ -58,15 +58,23 @@ description:         Please see the README on GitHub at <https://github.com/gith
 
 dependencies:
   - base >= 4.7 && < 5
+  - aeson
   - bytestring
   - containers
   - csv
+  #  - directory
+  #  - http-media
   - hourglass
   - lens
+  - mtl
   - parsec
-  - scotty
+  - servant
+  - servant-server
   - split
+  - string-conversions
   - text
+  - wai
+  - warp
   - wreq
 
 ghc-options: "-Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints"

@@ -1,10 +1,12 @@
-import           Coach
-import           Coach.Util
-import           Control.Exception.Base (evaluate)
+import           Coach.Parsing
+import           Coach.Structures
 import           Data.Hourglass
-import           Data.Map               as Map
-import           Data.Maybe             (fromJust)
 import           Test.Hspec
+
+import           Data.Map               as Map
+
+import           Control.Exception.Base (evaluate)
+import           Data.Maybe             (fromJust)
 
 main :: IO ()
 main =

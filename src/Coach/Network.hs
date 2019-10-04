@@ -1,12 +1,11 @@
-module Lib
-  ( parseCsvAt
-  , module Coach
-  ) where
+module Coach.Network where
 
-import           Coach
 import           Control.Lens
 import qualified Data.ByteString.Lazy.Char8 as Char8 (ByteString, unpack)
 import           Network.Wreq
+
+import           Coach.Parsing              (parseAndProcess)
+import           Coach.Structures
 
 parseCsvAt :: String -> IO CSVResult
 parseCsvAt url = fetchUrl url <&> parseAndProcess url
