@@ -15,6 +15,6 @@ main = do
   scotty (read port) $ do
     get "/" $ do
       people <- liftIO $ parseCsvAt sheetUrl
-      currentDate <- liftIO $ dtDate . localTimeUnwrap <$> localDateCurrent
+      currentDate <- liftIO $ localTimeUnwrap <$> localDateCurrent
       let res = dqsResponse currentDate people
       html $ mconcat [fromString res]

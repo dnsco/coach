@@ -1,10 +1,10 @@
 module Coach.Web where
 
 import           Coach
-import           Data.Hourglass (Date)
+import           Data.Hourglass (DateTime)
 
-dqsResponse :: Show e => Date -> Either e PeopleData -> String
-dqsResponse t (Right p) = showDqs $ delinquents t p
+dqsResponse :: Show e => DateTime -> Either e PeopleData -> String
+dqsResponse n (Right p) = showDqs $ delinquents n p
 dqsResponse _ (Left e)  = "FAILBOAT: " ++ show e
 
 showDqs :: Delinquents -> String
