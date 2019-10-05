@@ -34,7 +34,7 @@ instance MimeRender PlainText [Person] where
   mimeRender Proxy [] = "Y'all are phenomenal!"
   mimeRender Proxy ps =
     convertString . unlines $
-    "These bishes might gotta setup up their game: " : (render <$> ps)
+    "These folks might gotta setup up their game: " : (render <$> ps)
 
 render :: Person -> String
 render p = name p ++ " " ++ show (delinquentActivities p)

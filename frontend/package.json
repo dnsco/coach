@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test": "jest",
-    "dev": "next",
+    "dev": "next -p $PORT",
     "build": "next build",
     "start": "next start"
   },
