@@ -2,6 +2,10 @@
 out/
 .envrc
 .env
+
 .stack-work/
 coach.cabal
 coach.iml
+
+node_modules/
+.next/
