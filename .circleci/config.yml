@@ -26,6 +26,10 @@ jobs:
           paths:
             - "/root/.stack"
             - ".stack-work"
+  #      - store_artifacts:
+  #          # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+  #          path: ~/.local/bin/circleci-demo-haskell-exe
+  #          destination: circleci-demo-haskell-exe
   buildFrontend:
     docker:
       - image: circleci/node:latest
