@@ -9,20 +9,20 @@ jobs:
           # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
           name: Restore Cached Dependencies
           keys:
-            - coach-v1-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}
-            - coach-v1-{{ checksum "stack.yaml" }}
+            - coach-v1-{{ checksum "api/stack.yaml" }}-{{ checksum "api/package.yaml" }}
+            - coach-v1-{{ checksum "api/stack.yaml" }}
       - run:
           name: Resolve/Update Dependencies
-          command: stack --no-terminal setup
+          command: pushd api; stack --no-terminal setup; popd;
       - run:
           name: Run tests
-          command: stack --no-terminal test
+          command: pushd api; stack --no-terminal test; popd;
       - run:
           name: Install executable
-          command: stack --no-terminal install
+          command: pushd api; stack --no-terminal install; popd;
       - save_cache:
           name: Cache Dependencies
-          key: coach-v1-{{ checksum "stack.yaml" }}-{{ checksum "package.yaml" }}
+          key: coach-v1-{{ checksum "api/stack.yaml" }}-{{ checksum "api/package.yaml" }}
           paths:
             - "/root/.stack"
             - ".stack-work"
