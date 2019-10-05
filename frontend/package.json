@@ -1,5 +1,6 @@
 {
   "name": "with-jest-typescript",
+  "license": "UNLICENSED",
   "version": "1.0.0",
   "scripts": {
     "test": "jest",
