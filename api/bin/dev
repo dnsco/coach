@@ -1,0 +1,2 @@
+#!/bin/bash
+halive app/Main.hs src/
