@@ -7,7 +7,7 @@ describe('NiceCheckbox', () => {
     it('renders the checkbox with correct label', () => {
         expect(
             shallow(
-                <Hello/>
+                <Hello wat="no"/>
             ).text()
         ).toEqual('YO')
     })

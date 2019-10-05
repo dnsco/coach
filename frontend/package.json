@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test": "jest",
+    "test:ci": "tsc --noEmit && yarn test",
     "dev": "next -p $PORT",
     "build": "next build",
     "start": "next start"
