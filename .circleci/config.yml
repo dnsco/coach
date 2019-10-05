@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  build:
+  buildApi:
     docker:
       - image: fpco/stack-build:lts
     steps:
@@ -26,10 +26,30 @@ jobs:
           paths:
             - "/root/.stack"
             - ".stack-work"
-#      - store_artifacts:
-#          # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-#          path: ~/.local/bin/circleci-demo-haskell-exe
-#          destination: circleci-demo-haskell-exe
+  #      - store_artifacts:
+  #          # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+  #          path: ~/.local/bin/circleci-demo-haskell-exe
+  #          destination: circleci-demo-haskell-exe
+  buildFrontend:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - restore_cache:
+        name: Restore Yarn Package Cache
+        keys:
+          - yarn-packages-{{ checksum "fontend/yarn.lock" }}
+      - run:
+          name: Install Dependencies
+          command: cd frontend; yarn install --frozen-lockfile
+      - run:
+          name: Typecheck and Test
+          command: cd frontend; yarn test:ci
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum "frontend/yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
   deploy:
     docker:
       - image: buildpack-deps:trusty
@@ -44,10 +64,12 @@ workflows:
   version: 2
   build-deploy:
     jobs:
-      - build
+      - buildApi
+      - buildFrontend
       - deploy:
           requires:
-            - build
+            - buildApi
+            - buildFrontend
           filters:
             branches:
               only: master
