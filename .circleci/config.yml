@@ -31,10 +31,6 @@ jobs:
       - image: circleci/node:latest
     steps:
       - checkout
-      - restore_cache:
-        name: Restore Yarn Package Cache
-        keys:
-          - yarn-packages-{{ checksum "fontend/yarn.lock" }}
       - run:
           name: Install Dependencies
           command: cd frontend; yarn install --frozen-lockfile
