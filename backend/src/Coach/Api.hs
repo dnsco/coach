@@ -1,4 +1,4 @@
-module Coach.Servant where
+module Coach.Api where
 
 import           Coach.Network            (parseCsvAt)
 import           Coach.Parsing            (delinquents)

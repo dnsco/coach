@@ -4,4 +4,4 @@ module Coach
   ( runApi
   ) where
 
-import           Coach.Servant (runApi)
+import           Coach.Api (runApi)
