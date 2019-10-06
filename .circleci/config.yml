@@ -69,7 +69,7 @@ jobs:
           app-name: bitchdidyou-frontend
 workflows:
   version: 2
-  build-deployApi:
+  build-deploy-api-and-frontend:
     jobs:
       - build-api
       - build-frontend
