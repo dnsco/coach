@@ -3,6 +3,7 @@
   "license": "UNLICENSED",
   "version": "1.0.0",
   "scripts": {
+    "heroku-postbuild": "npm run build",
     "lint": "tslint -p tsconfig.json",
     "test": "jest",
     "test:ci": "yarn lint && tsc --noEmit && yarn test",

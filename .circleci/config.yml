@@ -49,23 +49,39 @@ jobs:
 #          key: yarn-packages-{{ checksum "frontend/yarn.lock" }}
 #          paths:
 #            - ~/.cache/yarn
-  deploy:
+  deployApi:
     docker:
       - image: buildpack-deps:trusty
     steps:
       - checkout
       - run:
-          name: Deploy Master to Heroku
+          name: Deploy API Master to Heroku
           command: |
-            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_API_APP.git master
+  deployFrontend:
+    docker:
+      - image: buildpack-deps:trusty
+      steps:
+        - checkout
+        - run:
+            name: Deploy Frontend Master to Heroku
+            command: |
+              git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_FRONTEND_APP.git master
 
 workflows:
   version: 2
-  build-deploy:
+  build-deployApi:
     jobs:
       - buildApi
       - buildFrontend
-      - deploy:
+      - deployApi:
+          requires:
+            - buildApi
+            - buildFrontend
+          filters:
+            branches:
+              only: master
+      - deployFrontend:
           requires:
             - buildApi
             - buildFrontend
