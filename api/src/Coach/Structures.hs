@@ -2,6 +2,7 @@ module Coach.Structures where
 
 import           Data.Hourglass.Types (Date)
 import           Data.Map.Internal    (Map)
+import           Data.Text            (Text)
 import           Text.Parsec          (ParseError)
 
 type CSVResult = Either ParseError PeopleData
@@ -12,8 +13,8 @@ type PeopleData = Map Person [Activity]
 
 type Activity = (ActivityName, [Event])
 
-type Event = (Date, String)
+type Event = (Date, Text)
 
-type ActivityName = String
+type ActivityName = Text
 
-type Person = String
+type Person = Text

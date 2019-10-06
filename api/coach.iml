@@ -10,29 +10,34 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="aeson-1.4.5.0" level="project" />
     <orderEntry type="library" name="base-4.12.0.0" level="project" />
     <orderEntry type="library" name="bytestring-0.10.8.2" level="project" />
     <orderEntry type="library" name="containers-0.6.0.1" level="project" />
     <orderEntry type="library" name="csv-0.1.2" level="project" />
     <orderEntry type="library" name="hourglass-0.2.12" level="project" />
-    <orderEntry type="library" name="lens-4.17.1" level="project" />
     <orderEntry type="library" name="mtl-2.2.2" level="project" />
     <orderEntry type="library" name="parsec-3.1.13.0" level="project" />
+    <orderEntry type="library" name="split-0.2.3.3" level="project" />
+    <orderEntry type="library" name="text-1.2.3.1" level="project" />
+    <orderEntry type="library" name="ghc-prim-0.5.3" level="project" />
+    <orderEntry type="library" name="integer-gmp-1.0.2.0" level="project" />
+    <orderEntry type="library" name="deepseq-1.4.4.0" level="project" />
+    <orderEntry type="library" name="array-0.5.3.0" level="project" />
+    <orderEntry type="library" name="filepath-1.4.2.1" level="project" />
+    <orderEntry type="library" name="transformers-0.5.6.2" level="project" />
+    <orderEntry type="library" name="binary-0.8.6.0" level="project" />
+    <orderEntry type="library" name="aeson-1.4.5.0" level="project" />
+    <orderEntry type="library" name="lens-4.17.1" level="project" />
     <orderEntry type="library" name="servant-0.16.2" level="project" />
     <orderEntry type="library" name="servant-server-0.16.2" level="project" />
-    <orderEntry type="library" name="split-0.2.3.3" level="project" />
     <orderEntry type="library" name="string-conversions-0.4.0.1" level="project" />
-    <orderEntry type="library" name="text-1.2.3.1" level="project" />
     <orderEntry type="library" name="wai-3.2.2.1" level="project" />
     <orderEntry type="library" name="warp-3.2.28" level="project" />
     <orderEntry type="library" name="wreq-0.5.3.2" level="project" />
     <orderEntry type="library" name="hspec-2.7.1" level="project" />
     <orderEntry type="library" name="attoparsec-0.13.2.3" level="project" />
     <orderEntry type="library" name="base-compat-0.10.5" level="project" />
-    <orderEntry type="library" name="deepseq-1.4.4.0" level="project" />
     <orderEntry type="library" name="dlist-0.8.0.7" level="project" />
-    <orderEntry type="library" name="ghc-prim-0.5.3" level="project" />
     <orderEntry type="library" name="hashable-1.2.7.0" level="project" />
     <orderEntry type="library" name="primitive-0.6.4.0" level="project" />
     <orderEntry type="library" name="scientific-0.3.6.2" level="project" />
@@ -44,9 +49,6 @@
     <orderEntry type="library" name="unordered-containers-0.2.10.0" level="project" />
     <orderEntry type="library" name="uuid-types-1.0.3" level="project" />
     <orderEntry type="library" name="vector-0.12.0.3" level="project" />
-    <orderEntry type="library" name="integer-gmp-1.0.2.0" level="project" />
-    <orderEntry type="library" name="array-0.5.3.0" level="project" />
-    <orderEntry type="library" name="filepath-1.4.2.1" level="project" />
     <orderEntry type="library" name="base-orphans-0.8.1" level="project" />
     <orderEntry type="library" name="bifunctors-5.5.5" level="project" />
     <orderEntry type="library" name="call-stack-0.1.0" level="project" />
@@ -60,7 +62,6 @@
     <orderEntry type="library" name="profunctors-5.3" level="project" />
     <orderEntry type="library" name="reflection-2.1.5" level="project" />
     <orderEntry type="library" name="semigroupoids-5.3.3" level="project" />
-    <orderEntry type="library" name="transformers-0.5.6.2" level="project" />
     <orderEntry type="library" name="transformers-compat-0.6.5" level="project" />
     <orderEntry type="library" name="QuickCheck-2.13.2" level="project" />
     <orderEntry type="library" name="case-insensitive-1.2.0.11" level="project" />
@@ -79,7 +80,6 @@
     <orderEntry type="library" name="wai-app-static-3.1.6.3" level="project" />
     <orderEntry type="library" name="word8-0.1.3" level="project" />
     <orderEntry type="library" name="utf8-string-1.0.1.1" level="project" />
-    <orderEntry type="library" name="binary-0.8.6.0" level="project" />
     <orderEntry type="library" name="async-2.2.2" level="project" />
     <orderEntry type="library" name="auto-update-0.1.6" level="project" />
     <orderEntry type="library" name="bsb-http-chunked-0.0.0.4" level="project" />
@@ -168,5 +168,13 @@
     <orderEntry type="library" name="asn1-parse-0.9.4" level="project" />
     <orderEntry type="library" name="pem-0.2.4" level="project" />
     <orderEntry type="library" name="old-time-1.1.0.3" level="project" />
+    <orderEntry type="library" name="servant-ts-0.1.0.0" level="project" />
+    <orderEntry type="library" name="aeson-generic-ts-0.1.0.0" level="project" />
+    <orderEntry type="library" name="prettyprinter-1.2.1.1" level="project" />
+    <orderEntry type="library" name="servant-foreign-0.15" level="project" />
+    <orderEntry type="library" name="th-reify-many-0.1.9" level="project" />
+    <orderEntry type="library" name="safe-0.3.17" level="project" />
+    <orderEntry type="library" name="th-expand-syns-0.4.5.0" level="project" />
+    <orderEntry type="library" name="syb-0.7.1" level="project" />
   </component>
 </module>

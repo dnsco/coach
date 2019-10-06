@@ -9,13 +9,6 @@ copyright:           "2019 Author name here"
 extra-source-files:
   - README.md
 
-# Metadata used when publishing your package
-# synopsis:            Short description of your package
-# category:            Web
-
-# To avoid duplicated efforts in documentation and dealing with the
-# complications of embedding Haddock markup inside cabal files, it is
-# common to point users to the README.md file.
 default-extensions:
   # cribbed from https://lexi-lambda.github.io/blog/2018/02/10/an-opinionated-guide-to-haskell-in-2018/
   - ApplicativeDo
@@ -86,17 +79,18 @@ tests:
 dependencies:
   - base >= 4.7 && < 5
   - aeson
+  - aeson-generic-ts
   - bytestring
   - containers
   - csv
-  #  - directory
-  #  - http-media
   - hourglass
   - lens
   - mtl
   - parsec
   - servant
+  - servant-foreign
   - servant-server
+  - servant-ts
   - split
   - string-conversions
   - text
