@@ -2,7 +2,7 @@
 out/
 .envrc
 .env
-
+*.swp
 .stack-work/
 coach.cabal
 

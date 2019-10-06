@@ -3,8 +3,9 @@
   "license": "UNLICENSED",
   "version": "1.0.0",
   "scripts": {
+    "lint": "tslint -p tsconfig.json",
     "test": "jest",
-    "test:ci": "tsc --noEmit && yarn test",
+    "test:ci": "yarn lint && tsc --noEmit && yarn test",
     "dev": "next -p $PORT",
     "build": "next build",
     "start": "next start"
@@ -25,8 +26,14 @@
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.11.2",
     "jest": "^24.5.0",
+    "prettier": "^1.18.2",
     "react-addons-test-utils": "^15.6.2",
     "react-test-renderer": "^16.8.4",
+    "tslint": "^5.20.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "tslint-react": "^4.1.0",
     "typescript": "^3.3.3333"
   }
 }
