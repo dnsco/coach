@@ -1,5 +1,5 @@
-import React, { Fragment, FunctionComponent } from "react";
+import React, { Fragment } from "react";
 
-const Hello: FunctionComponent<{}> = () => <Fragment>YO</Fragment>;
+const Hello = () => <Fragment>YO</Fragment>;
 
 export { Hello };

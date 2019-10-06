@@ -1,2 +1,2 @@
-api: cd api; $(direnv export bash); stack run
-frontend: cd frontend; $(direnv export bash); yarn dev
+api: cd api; eval $(direnv export bash); stack run
+frontend: cd frontend; eval $(direnv export bash); yarn dev

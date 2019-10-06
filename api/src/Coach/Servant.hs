@@ -17,7 +17,7 @@ import           Servant
 import           System.Environment       (getEnv)
 import           System.Hourglass
 
-type PeopleApi = Get '[ PlainText, JSON] [Person]
+type PeopleApi = Get '[JSON] [Person]
 
 data Person =
   Person
