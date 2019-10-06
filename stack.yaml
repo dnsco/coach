@@ -4,7 +4,7 @@
 resolver: lts-14.7
 
 packages:
-- api
+- backend
 
 extra-deps:
   - git: https://github.com/smaccoun/servant-ts
