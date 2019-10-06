@@ -9,7 +9,7 @@
     "test:ci": "yarn lint && tsc --noEmit && yarn test",
     "dev": "next -p $PORT",
     "build": "next build",
-    "start": "next start"
+    "start": "next start -p $PORT"
   },
   "dependencies": {
     "next": "latest",
