@@ -24,7 +24,7 @@ jobs:
           command: cd backend; stack --no-terminal install;
       - save_cache:
           name: Cache Dependencies
-          key: coach-v1-{{ checksum "stack.yaml" }}-{{ checksum "api/package.yaml" }}
+          key: coach-v1-{{ checksum "stack.yaml" }}-{{ checksum "backend/package.yaml" }}
           paths:
             - "/root/.stack"
             - ".stack-work"
