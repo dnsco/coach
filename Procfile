@@ -1,2 +1,2 @@
-api: cd api; PORT=$API_PORT stack run
-frontend: cd frontend; PORT=$FRONTEND_PORT yarn dev
+api: cd api; $(direnv export bash); stack run
+frontend: cd frontend; $(direnv export bash); yarn dev
