@@ -1,14 +1,17 @@
 module Coach.Structures where
 
 import           Data.Hourglass.Types (Date)
-import           Data.Map.Internal    (Map)
+import           Data.Map.Strict      (Map)
 import           Data.Text            (Text)
 import           Text.Parsec          (ParseError)
 
 type CSVResult = Either ParseError PeopleData
 
-type Delinquents = [(Person, [ActivityName])]
+type Delinquents = Map Person [DActivity]
 
+type DActivity = (ActivityName, Bool, [Event])
+
+--data ActivityStatus = CurrentActivity | DelinquentActivity
 type PeopleData = Map Person [Activity]
 
 type Activity = (ActivityName, [Event])

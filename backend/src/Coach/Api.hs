@@ -1,47 +1,50 @@
 module Coach.Api where
 
-import           Coach.Network            (parseCsvAt)
-import           Coach.Parsing            (delinquents)
-import qualified Coach.Structures         as Coach
-import           Control.Monad.Except
+import           Control.Monad.IO.Class (liftIO)
 import           Data.Aeson
 import           Data.Hourglass
-import           Data.String.Conversions
+import           Data.Map.Strict        as Map
 import           Data.Text
-
 import           GHC.Generics
-import           Network.Wai
-import           Network.Wai.Handler.Warp
 import           Servant
-
-import           System.Environment       (getEnv)
+import           System.Environment     (getEnv)
 import           System.Hourglass
 
-type PeopleApi = Get '[JSON] [Person]
+import           Coach.Network          (parseCsvAt)
+import           Coach.Parsing          (delinquents)
+import qualified Coach.Structures       as Coach
+
+type PeopleApi = Get '[ JSON] [Person]
 
 data Person =
   Person
-    { name                 :: Text
-    , delinquentActivities :: [Text]
+    { name       :: Text
+    , activities :: [Activity]
     }
   deriving (Eq, Show, Generic)
 
 instance ToJSON Person
 
-instance MimeRender PlainText [Person] where
-  mimeRender Proxy [] = "Y'all are phenomenal!"
-  mimeRender Proxy ps =
-    convertString . Data.Text.unlines $
-    pack "These folks might gotta setup up their game: " : (render <$> ps)
+data Activity =
+  Activity
+    { title        :: Text
+    , isDelinquent :: Bool
+    , events       :: [(Text, Text)]
+    }
+  deriving (Eq, Show, Generic)
 
-render :: Person -> Text
-render = name -- ++ delinquentActivities p
+instance ToJSON Activity
 
 peopleFromDs :: Coach.Delinquents -> [Person]
-peopleFromDs ds = uncurry Person <$> ds
+peopleFromDs = Map.foldlWithKey (\ps k as -> ps ++ [toApi k as]) []
 
-people :: [Person]
-people = [Person "Bob" ["GOURDS"]]
+toApi :: Coach.Person -> [Coach.DActivity] -> Person
+toApi k as = Person k (toApiActivity <$> as)
+  where
+    toApiActivity :: Coach.DActivity -> Activity
+    toApiActivity (an, isD, es) = Activity an isD (toApiEvent <$> es)
+    toApiEvent :: Coach.Event -> (Text, Text)
+    toApiEvent (date, description) = (pack (show date), description)
 
 server1 :: Server PeopleApi
 server1 = do
@@ -55,8 +58,5 @@ server1 = do
 peopleApi :: Proxy PeopleApi
 peopleApi = Proxy
 
-apiApp :: Application
-apiApp = serve peopleApi server1
-
-runApi :: Int -> IO ()
-runApi port = run port apiApp
+coachApi :: Application
+coachApi = serve peopleApi server1

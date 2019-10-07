@@ -7,7 +7,7 @@ import           Data.Text        (pack)
 import           Debug.Trace      (trace)
 import           GHC.Unicode      (isSpace)
 
-import qualified Data.Map         as Map
+import           Data.Map.Strict  (Map, fromListWith)
 import qualified Text.CSV         as CSV
 
 parseAndProcess :: String -> String -> CSVResult
@@ -17,7 +17,7 @@ parseAndProcess url s =
 
 parseCSV :: CSV.CSV -> PeopleData
 parseCSV rows =
-  Map.fromListWith (++) ((\(p, a) -> (p, [a])) <$> parseActivities rows)
+  fromListWith (++) ((\(p, a) -> (p, [a])) <$> parseActivities rows)
 
 parseActivities :: CSV.CSV -> [(Person, Activity)]
 parseActivities rows =
@@ -27,29 +27,22 @@ parseActivities rows =
     fes :: [String] -> [Event]
     fes es = [(d, pack e) | (d, e) <- zip ds es, not (null e)]
 
-delinquents :: DateTime -> PeopleData -> Delinquents
-delinquents d =
-  Map.foldrWithKey
-    (\k as ps ->
-       case fa as of
-         []  -> ps
-         ans -> ps ++ [(k, ans)])
-    []
-  where
-    fa = undoneActivityDays d
+delinquents :: DateTime -> Map Person [Activity] -> Map Person [DActivity]
+delinquents d pd =
+  (\as -> [(fst a, undoneActivityDays d a, snd a) | a <- as]) <$> pd
 
-undoneActivityDays :: DateTime -> [Activity] -> [ActivityName]
+undoneActivityDays :: DateTime -> Activity -> Bool
 undoneActivityDays t as =
   if trace ("timestamp: " ++ show (dtTime t)) todHour (dtTime t) > 1 -- hour is zero indexed
-    then dateFinder td
-    else dateFinder
-           Date
-             { dateYear = dateYear td
-             , dateMonth = dateMonth td
-             , dateDay = dateDay td - 1
-             }
+    then not . null . dateFinder $ td
+    else not . null . dateFinder $
+         Date
+           { dateYear = dateYear td
+           , dateMonth = dateMonth td
+           , dateDay = dateDay td - 1
+           }
   where
-    dateFinder d = [an | (an, es) <- as, d `notElem` (fst <$> es)]
+    dateFinder d = [an | (an, es) <- [as], d `notElem` (fst <$> es)]
     td = dtDate t
 
 parseDate :: String -> Maybe Date

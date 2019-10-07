@@ -1,7 +1,8 @@
-import           Coach              (runApi)
+import           Coach                    (coachApi)
+import           Network.Wai.Handler.Warp
 import           System.Environment
 
 main :: IO ()
 main = do
   port <- getEnv "PORT"
-  runApi $ read port
+  run (read port) coachApi

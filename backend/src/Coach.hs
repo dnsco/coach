@@ -1,7 +1,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Coach
-  ( runApi
+  ( coachApi
   ) where
 
-import           Coach.Api (runApi)
+import           Coach.Api (coachApi)

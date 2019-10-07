@@ -3,10 +3,12 @@ import           Coach.Structures
 import           Data.Hourglass
 import           Test.Hspec
 
-import           Data.Map               as Map
+import           Data.Map.Strict        as Map
+import           Data.Set               as Set
 
 import           Control.Exception.Base (evaluate)
 import           Data.Maybe             (fromJust)
+import           Data.Text              (unpack)
 
 main :: IO ()
 main =
@@ -30,16 +32,16 @@ main =
           length (getPerson' "ben") `shouldBe` (2 :: Int)
           fst (head (getPerson' "ben")) `shouldBe` "fishing"
     describe "finding delinquents" $ do
-      let findDelinquents = flip delinquents (fromJust csvResult)
-      it "has people who didn't do the shit" $ do
-        let ds = findDelinquents august15
-        ds `shouldBe` [("michaela", ["raging"])]
-      it "filters two people" $ do
-        let ds = findDelinquents august14
-        ds `shouldBe` [("michaela", ["raging"]), ("ben", ["xylophon"])]
-      it "groups people's failed activities" $ do
-        let ds = findDelinquents august16
-        ds `shouldBe`
+      let delinquentsOn = findDelinquents csvResult
+      it "has people who didn't do the shit" $
+        delinquentsOn august15 `shouldBe`
+        Set.fromList [("michaela", ["raging"])]
+      it "filters two people" $
+        delinquentsOn august14 `shouldBe`
+        Set.fromList [("michaela", ["raging"]), ("ben", ["xylophon"])]
+      it "groups people's failed activities" $
+        delinquentsOn august16 `shouldBe`
+        Set.fromList
           [("michaela", ["raging"]), ("ben", ["fishing", "xylophon"])]
   where
     csvStr = trim (unlines csvRows)
@@ -57,6 +59,19 @@ main =
     august16 =
       DateTime {dtDate = fromJust $ parseDate "08/16/2087", dtTime = fourAm}
     fourAm = TimeOfDay {todHour = 4, todMin = 0, todSec = 0, todNSec = 0}
+
+findDelinquents :: Maybe PeopleData -> DateTime -> Set (Person, [String])
+findDelinquents csv' date =
+  Set.fromList (toOldApi (delinquents date (fromJust csv')))
+
+toOldApi :: Map Person [DActivity] -> [(Person, [String])]
+toOldApi =
+  Map.foldlWithKey
+    (\people name acts ->
+       case [unpack an | (an, isDelinquent, _) <- acts, isDelinquent] of
+         []    -> people
+         acts' -> people ++ [(name, acts')])
+    []
 
 rightToMaybe :: Either a b -> Maybe b
 rightToMaybe = either (const Nothing) Just
