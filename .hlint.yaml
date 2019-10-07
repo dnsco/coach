@@ -7,6 +7,7 @@
 
 #- ignore: {name: "Redundant do", within: Spec}
 - ignore: {name: "Redundant do"}
+- ignore: {name: "Use head"}
 #- ignore: {name: "Reduce duplication", within: Spec}
 
 # Specify additional command line arguments
