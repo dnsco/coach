@@ -27,7 +27,7 @@ const NewPage = ({ people: [names, activities, ...days] }: IProps) => {
       <table>
         <tr>
           {names.map((name, i) => (
-            <th key={name} style={{ padding: "15px 20px" }}>
+            <th key={name} style={{ padding: "15px 20px", minWidth: "360px" }}>
               <h4 style={{ margin: "0px" }}>{name}</h4>{" "}
               <h5 style={{ margin: "0px", fontWeight: "bold" }}>
                 {activities[i]}

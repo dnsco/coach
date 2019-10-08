@@ -4,8 +4,8 @@ import           Control.Lens
 import qualified Data.ByteString.Lazy.Char8 as Char8 (ByteString, unpack)
 import           Network.Wreq
 
-import           Coach.Parsing              (newProcess, parseAndProcess)
-import           Coach.Structures
+import           Coach.Parsing              (CSVResult, NewCSVResult,
+                                             newProcess, parseAndProcess)
 
 parseCsvAt :: String -> IO CSVResult
 parseCsvAt url = fetchUrl url <&> parseAndProcess url

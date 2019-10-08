@@ -1,4 +1,4 @@
-import           Coach                    (coachApi)
+import           Coach.Api                (coachApi)
 import           Network.Wai.Handler.Warp
 import           System.Environment
 

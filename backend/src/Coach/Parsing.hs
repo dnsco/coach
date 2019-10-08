@@ -1,15 +1,28 @@
 module Coach.Parsing where
 
-import           Coach.Structures
 import           Data.Hourglass
-import           Data.List.Split  (splitOn)
-import           Data.Text        (pack)
-import           Debug.Trace      (trace)
-import           GHC.Unicode      (isSpace)
+import           Data.List       (transpose)
+import           Data.List.Split (splitOn)
+import           Data.Map.Strict (Map, fromListWith)
+import           Data.Text       (Text, pack)
+import           Debug.Trace     (trace)
+import           GHC.Unicode     (isSpace)
+import qualified Text.CSV        as CSV
+import           Text.Parsec     (ParseError)
 
-import           Data.List        (transpose)
-import           Data.Map.Strict  (Map, fromListWith)
-import qualified Text.CSV         as CSV
+type CSVResult = Either ParseError PeopleData
+
+type NewCSVResult = Either ParseError [[String]]
+
+type PeopleData = Map Person [Activity]
+
+type Activity = (ActivityName, [Event])
+
+type Event = (Date, Text)
+
+type ActivityName = Text
+
+type Person = Text
 
 parseAndProcess :: String -> String -> CSVResult
 parseAndProcess url s =
@@ -39,25 +52,21 @@ parseActivities rows =
   where
     ds = [d | (Just d) <- parseDate <$> drop 2 (head rows)]
     fes :: [String] -> [Event]
-    fes es = [(d, pack e) | (d, e) <- zip ds es, not (null e)]
-
-delinquents :: DateTime -> Map Person [Activity] -> Map Person [DActivity]
-delinquents d pd =
-  (\as -> [(fst a, undoneActivityDays d a, snd a) | a <- as]) <$> pd
+    fes es = [(d, pack e) | (d, e) <- zip ds es]
 
 undoneActivityDays :: DateTime -> Activity -> Bool
 undoneActivityDays t as =
-  if trace ("timestamp: " ++ show (dtTime t)) todHour (dtTime t) > 1 -- hour is zero indexed
-    then not . null . dateFinder $ td
+  if todHour (dtTime t) > 1 -- hour is zero indexed
+    then not . null . dateFinder $ today
     else not . null . dateFinder $
          Date
-           { dateYear = dateYear td
-           , dateMonth = dateMonth td
-           , dateDay = dateDay td - 1
+           { dateYear = dateYear today
+           , dateMonth = dateMonth today
+           , dateDay = dateDay today - 1
            }
   where
     dateFinder d = [an | (an, es) <- [as], d `notElem` (fst <$> es)]
-    td = dtDate t
+    today = dtDate t
 
 parseDate :: String -> Maybe Date
 parseDate s =

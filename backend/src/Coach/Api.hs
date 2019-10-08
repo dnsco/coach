@@ -2,17 +2,14 @@ module Coach.Api where
 
 import           Control.Monad.IO.Class (liftIO)
 import           Data.Aeson
-import           Data.Hourglass
 import           Data.Map.Strict        as Map
 import           Data.Text
 import           GHC.Generics
 import           Servant
 import           System.Environment     (getEnv)
-import           System.Hourglass
 
 import           Coach.Network          (newParseCsv, parseCsvAt)
-import           Coach.Parsing          (delinquents)
-import qualified Coach.Structures       as Coach
+import qualified Coach.Parsing          as Coach
 
 type PeopleApi = Get '[ JSON] [Person] :<|> "people" :> Get '[ JSON] [[String]]
 
@@ -27,34 +24,31 @@ instance ToJSON Person
 
 data Activity =
   Activity
-    { title        :: Text
-    , isDelinquent :: Bool
-    , events       :: [(Text, Text)]
+    { title  :: Text
+    , events :: [(Text, Text)]
     }
   deriving (Eq, Show, Generic)
 
 instance ToJSON Activity
 
-peopleFromDs :: Coach.Delinquents -> [Person]
+peopleFromDs :: Coach.PeopleData -> [Person]
 peopleFromDs = Map.foldlWithKey (\ps k as -> ps ++ [toApi k as]) []
 
-toApi :: Coach.Person -> [Coach.DActivity] -> Person
+toApi :: Coach.Person -> [Coach.Activity] -> Person
 toApi k as = Person k (toApiActivity <$> as)
   where
-    toApiActivity :: Coach.DActivity -> Activity
-    toApiActivity (an, isD, es) = Activity an isD (toApiEvent <$> es)
+    toApiActivity :: Coach.Activity -> Activity
+    toApiActivity (an, es) = Activity an (toApiEvent <$> es)
     toApiEvent :: Coach.Event -> (Text, Text)
     toApiEvent (date, description) = (pack (show date), description)
 
 server1 :: Server PeopleApi
 server1 =
   do sheetUrl <- liftIO $ getEnv "SHEET_URL"
-     currentDate <- liftIO (localTimeUnwrap <$> localDateCurrent)
      peopleData <- liftIO $ parseCsvAt sheetUrl
      case peopleData of
-       Right peopleData ->
-         return . peopleFromDs $ delinquents currentDate peopleData
-       Left _ -> throwError err503 {errBody = "Couldn't parse CSV."}
+       Right ps -> return . peopleFromDs $ ps
+       Left _   -> throwError err503 {errBody = "Couldn't parse CSV."}
      :<|> do
     sheetUrl <- liftIO $ getEnv "SHEET_URL"
     people <- liftIO $ newParseCsv sheetUrl
