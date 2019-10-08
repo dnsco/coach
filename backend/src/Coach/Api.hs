@@ -57,7 +57,6 @@ server1 =
        Left _ -> throwError err503 {errBody = "Couldn't parse CSV."}
      :<|> do
     sheetUrl <- liftIO $ getEnv "SHEET_URL"
-    currentDate <- liftIO (localTimeUnwrap <$> localDateCurrent)
     people <- liftIO $ newParseCsv sheetUrl
     case people of
       Right ps -> return ps
