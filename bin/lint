@@ -1,0 +1,8 @@
+#!/bin/bash
+set -efux
+pushd backend
+ 	./bin/lint	
+popd
+pushd frontend
+	./bin/lint
+popd

@@ -1,0 +1,8 @@
+#!/bin/bash
+set -efux
+pushd backend
+ 	./bin/fix
+popd
+pushd frontend
+	./bin/fix
+popd
