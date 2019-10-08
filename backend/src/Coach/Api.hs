@@ -2,14 +2,17 @@ module Coach.Api where
 
 import           Control.Monad.IO.Class (liftIO)
 import           Data.Aeson
+import           Data.Hourglass         (DateTime, localTimeUnwrap)
 import           Data.Map.Strict        as Map
-import           Data.Text
 import           GHC.Generics
 import           Servant
 import           System.Environment     (getEnv)
+import           System.Hourglass       (localDateCurrent)
 
 import           Coach.Network          (newParseCsv, parseCsvAt)
+import           Coach.Parsing          (delinquentOn)
 import qualified Coach.Parsing          as Coach
+import           Data.Text              (Text, pack)
 
 type PeopleApi = Get '[ JSON] [Person] :<|> "people" :> Get '[ JSON] [[String]]
 
@@ -24,30 +27,33 @@ instance ToJSON Person
 
 data Activity =
   Activity
-    { title  :: Text
-    , events :: [(Text, Text)]
+    { title        :: Text
+    , isDelinquent :: Bool
+    , events       :: [(Text, Text)]
     }
   deriving (Eq, Show, Generic)
 
 instance ToJSON Activity
 
-peopleFromDs :: Coach.PeopleData -> [Person]
-peopleFromDs = Map.foldlWithKey (\ps k as -> ps ++ [toApi k as]) []
+peopleFromDs :: DateTime -> Coach.PeopleData -> [Person]
+peopleFromDs date = Map.foldlWithKey (\ps k as -> ps ++ [toApi k as date]) []
 
-toApi :: Coach.Person -> [Coach.Activity] -> Person
-toApi k as = Person k (toApiActivity <$> as)
+toApi :: Coach.Person -> [Coach.Activity] -> DateTime -> Person
+toApi k as date = Person k (toApiActivity <$> as)
   where
     toApiActivity :: Coach.Activity -> Activity
-    toApiActivity (an, es) = Activity an (toApiEvent <$> es)
+    toApiActivity (an, es) =
+      Activity an (delinquentOn date es) (reverse (toApiEvent <$> es))
     toApiEvent :: Coach.Event -> (Text, Text)
-    toApiEvent (date, description) = (pack (show date), description)
+    toApiEvent (date', description) = (pack (show date'), description)
 
 server1 :: Server PeopleApi
 server1 =
   do sheetUrl <- liftIO $ getEnv "SHEET_URL"
      peopleData <- liftIO $ parseCsvAt sheetUrl
+     currentDate <- liftIO (localTimeUnwrap <$> localDateCurrent)
      case peopleData of
-       Right ps -> return . peopleFromDs $ ps
+       Right ps -> return (peopleFromDs currentDate ps)
        Left _   -> throwError err503 {errBody = "Couldn't parse CSV."}
      :<|> do
     sheetUrl <- liftIO $ getEnv "SHEET_URL"

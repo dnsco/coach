@@ -54,20 +54,6 @@ parseActivities rows =
     fes :: [String] -> [Event]
     fes es = [(d, pack e) | (d, e) <- zip ds es]
 
-undoneActivityDays :: DateTime -> Activity -> Bool
-undoneActivityDays t as =
-  if todHour (dtTime t) > 1 -- hour is zero indexed
-    then not . null . dateFinder $ today
-    else not . null . dateFinder $
-         Date
-           { dateYear = dateYear today
-           , dateMonth = dateMonth today
-           , dateDay = dateDay today - 1
-           }
-  where
-    dateFinder d = [an | (an, es) <- [as], d `notElem` (fst <$> es)]
-    today = dtDate t
-
 parseDate :: String -> Maybe Date
 parseDate s =
   case read <$> splitOn "/" s of
@@ -77,3 +63,17 @@ parseDate s =
 
 trim :: String -> String
 trim = (\f -> f . f) (reverse . dropWhile isSpace)
+
+delinquentOn :: DateTime -> [Event] -> Bool
+delinquentOn now es =
+  if todHour (dtTime now) > 1 -- hour is zero indexed, so padding till 2am
+    then dateFinder today
+    else dateFinder
+           Date
+             { dateYear = dateYear today
+             , dateMonth = dateMonth today
+             , dateDay = dateDay today - 1
+             }
+  where
+    today = dtDate now
+    dateFinder d = d `elem` (fst <$> es)
