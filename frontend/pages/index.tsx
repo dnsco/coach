@@ -47,7 +47,7 @@ interface IPersonProps {
 }
 
 const Person: FComponent<IPersonProps> = ({ person: { name, activities } }) => (
-  <div className="column" style={{overflow:"hidden", maxWidth: "360px"}}>
+  <div className="column" style={{ overflow: "hidden", maxWidth: "360px" }}>
     <h3>{name}</h3>
     {activities.map(a => (
       <Activity key={name + a.title} activity={a} />
