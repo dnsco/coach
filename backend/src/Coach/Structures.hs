@@ -7,6 +7,8 @@ import           Text.Parsec          (ParseError)
 
 type CSVResult = Either ParseError PeopleData
 
+type NewCSVResult = Either ParseError [[String]]
+
 type Delinquents = Map Person [DActivity]
 
 type DActivity = (ActivityName, Bool, [Event])

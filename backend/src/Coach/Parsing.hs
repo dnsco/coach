@@ -16,6 +16,9 @@ parseAndProcess url s =
   parseCSV <$>
   trace ("parsing csv: of " ++ s ++ " from : " ++ url) CSV.parseCSV url s
 
+newProcess :: String -> String -> NewCSVResult
+newProcess url s = newParse <$> CSV.parseCSV url s
+
 newParse :: CSV.CSV -> [[String]]
 newParse csv = reverseChronological rows
   where
