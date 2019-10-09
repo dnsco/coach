@@ -1,15 +1,33 @@
-@import "~normalize-scss";
 @import url("http://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic");
-@import "~milligram-sass";
+@import '~modern-normalize/modern-normalize.css';
+
+@import "colors";
+@import "base";
+
 
 .person {
   @extend .column;
   max-width: 360px;
   overflow: hidden;
+  margin-top: 2rem;
 }
 
 .event-text {
   height: 50px;
+  line-height: 50px;
+  vertical-align: middle;
   text-overflow: ellipsis;
   white-space: nowrap;
+  border-bottom: .2rem solid $color-tertiary;
+
+  &:first-of-type {
+    border-top: .2rem solid $color-tertiary;
+    margin-top: 1rem;
+  }
+}
+
+.sheet-link {
+  @extend .button;
+  float: right;
+  margin-top: 3rem;
 }
