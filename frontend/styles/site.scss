@@ -1,0 +1,15 @@
+@import "~normalize-scss";
+@import url("http://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic");
+@import "~milligram-sass";
+
+.person {
+  @extend .column;
+  max-width: 360px;
+  overflow: hidden;
+}
+
+.event-text {
+  height: 50px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

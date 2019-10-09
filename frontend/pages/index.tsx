@@ -8,37 +8,22 @@ interface IProps {
 }
 
 function Activity({ activity }: { activity: IApiActivity }) {
-  const { title, isDelinquent, events } = activity;
+  const { title, events } = activity;
   return (
-    <span>
-      <table>
-        <thead>
-          <tr>
-            <th>
-              {title}
-              <div className="small">
-                {isDelinquent ? "Step it up, queen." : "You Got it!"}
-              </div>
-            </th>
+    <table>
+      <thead>
+        <tr>
+          <th>{title}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {events.map(([_, s], i) => (
+          <tr key={i + s}>
+            <td className="event-text">{s}</td>
           </tr>
-        </thead>
-        <tbody>
-          {events.map(([_, s], i) => (
-            <tr key={i + s}>
-              <td
-                style={{
-                  height: "50px",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap"
-                }}
-              >
-                {s}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </span>
+        ))}
+      </tbody>
+    </table>
   );
 }
 
@@ -47,7 +32,7 @@ interface IPersonProps {
 }
 
 const Person: FComponent<IPersonProps> = ({ person: { name, activities } }) => (
-  <div className="column" style={{ overflow: "hidden", maxWidth: "360px" }}>
+  <div className="person">
     <h3>{name}</h3>
     {activities.map(a => (
       <Activity key={name + a.title} activity={a} />

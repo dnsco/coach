@@ -7,6 +7,6 @@
     "heroku-postbuild": "cd frontend; yarn build"
   },
   "dependencies": {
-    "yarn": "^1.19.0"
+    "yarn": "^1.19.1"
   }
 }
