@@ -23,7 +23,7 @@ function Activity({ activity }: { activity: IApiActivity }) {
     <div className="activity">
       <h4>{title}</h4>
       {events.map(([_, s], i) => (
-        <div key={i + s} className="event-text">
+        <div key={i + s} className="event">
           {s}
         </div>
       ))}

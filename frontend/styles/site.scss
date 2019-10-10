@@ -1,25 +1,28 @@
-@import url("http://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic");
-@import '~modern-normalize/modern-normalize.css';
-
 @import "colors";
 @import "base";
+@import "utility";
 
 
 .person {
   @extend .column;
-  max-width: 360px;
+  //max-width: 360px;
   overflow: hidden;
-  margin-top: 2rem;
+  margin: 2rem 0 1.5rem;
+
+  @media (max-width: $mobile-breakpoint) {
+    text-align: center;
+  }
 }
 
-.event-text {
+
+.event {
+  @extend .oneline;
+
   height: 50px;
   line-height: 50px;
   vertical-align: middle;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  border-bottom: .1rem solid $color-quinary;
 
+  border-bottom: .1rem solid $color-quinary;
   &:first-of-type {
     border-top: .1rem solid $color-quinary;
     margin-top: 1rem;

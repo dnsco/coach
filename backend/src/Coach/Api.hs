@@ -2,7 +2,7 @@ module Coach.Api where
 
 import           Control.Monad.IO.Class (liftIO)
 import           Data.Aeson
-import           Data.Hourglass         (DateTime, localTimeUnwrap)
+import           Data.Hourglass
 import           Data.Map.Strict        as Map
 import           GHC.Generics
 import           Servant
@@ -45,7 +45,8 @@ toApi k as date = Person k (toApiActivity <$> as)
     toApiActivity (an, es) =
       Activity an (delinquentOn date es) (reverse (toApiEvent <$> es))
     toApiEvent :: Coach.Event -> (Text, Text)
-    toApiEvent (date', description) = (pack (show date'), description)
+    toApiEvent (date', description) =
+      (pack (timePrint ISO8601_Date date'), description)
 
 server1 :: Server PeopleApi
 server1 =
