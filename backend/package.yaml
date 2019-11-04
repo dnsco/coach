@@ -79,7 +79,6 @@ tests:
 dependencies:
   - base >= 4.7 && < 5
   - aeson
-  - aeson-generic-ts
   - bytestring
   - containers
   - csv
@@ -89,8 +88,8 @@ dependencies:
   - servant
   - servant-foreign
   - servant-server
-  - servant-ts
   - split
   - text
+  - twilio
   - warp
   - wreq

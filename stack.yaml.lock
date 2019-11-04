@@ -5,35 +5,12 @@
 
 packages:
 - completed:
-    subdir: lib
-    cabal-file:
-      size: 3129
-      sha256: 2877914d777f98e4249d458f0bde502ff191e1cde0ed6c182105348578535b66
-    name: servant-ts
-    version: 0.1.0.0
-    git: https://github.com/smaccoun/servant-ts
+    hackage: twilio-0.3.0.0@sha256:155b6780dd90f1835172f1651aec9caf008f9359317629fb7e39ac07d37c7870,5892
     pantry-tree:
-      size: 1119
-      sha256: 6e2c6353e3582a934aa36a1aa8b0eeb9bd8221377bad5bacaa34be48111072ff
-    commit: e615995e1e83e49e155aa996f93627a78084f4e9
+      size: 4592
+      sha256: 87532151af7bb7de8fd3016e3f59112b28bbe7211d842e58604b2daaded29122
   original:
-    subdir: lib
-    git: https://github.com/smaccoun/servant-ts
-    commit: e615995e1e83e49e155aa996f93627a78084f4e9
-- completed:
-    cabal-file:
-      size: 3184
-      sha256: d32a2e1724082a22b38c3a0367e4b3e9ca61587ac74830bd2fc8b3050c598515
-    name: aeson-generic-ts
-    version: 0.1.0.0
-    git: https://github.com/smaccoun/aeson-generic-ts
-    pantry-tree:
-      size: 1827
-      sha256: 4bc0406013d91b01a18adbaddeae4f3373c7ec862dab1a4a25d353d9a0d6255f
-    commit: 080ec883e77aad45cc01cc211bdb9998bd47e66e
-  original:
-    git: https://github.com/smaccoun/aeson-generic-ts
-    commit: 080ec883e77aad45cc01cc211bdb9998bd47e66e
+    hackage: twilio-0.3.0.0
 snapshots:
 - completed:
     size: 523700
