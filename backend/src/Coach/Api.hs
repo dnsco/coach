@@ -9,12 +9,13 @@ import           Servant
 import           System.Environment     (getEnv)
 import           System.Hourglass       (localDateCurrent)
 
-import           Coach.Network          (newParseCsv, parseCsvAt)
+import           Coach.Network          (parseCsvAt)
 import           Coach.Parsing          (delinquentOn)
 import qualified Coach.Parsing          as Coach
 import           Data.Text              (Text, pack)
+import           Text.Parsec            (ParseError)
 
-type PeopleApi = Get '[ JSON] [Person] :<|> "people" :> Get '[ JSON] [[String]]
+type PeopleApi = Get '[ JSON] [Person]
 
 data Person =
   Person
@@ -48,20 +49,18 @@ toApi k as date = Person k (toApiActivity <$> as)
     toApiEvent (date', description) =
       (pack (timePrint ISO8601_Date date'), description)
 
+fetchAndParseForNow :: IO (Either ParseError [Person])
+fetchAndParseForNow = do
+  csv <- getEnv "SHEET_URL " >>= parseCsvAt
+  date <- localTimeUnwrap <$> localDateCurrent
+  return (peopleFromDs date <$> csv)
+
 server1 :: Server PeopleApi
-server1 =
-  do sheetUrl <- liftIO $ getEnv "SHEET_URL"
-     peopleData <- liftIO $ parseCsvAt sheetUrl
-     currentDate <- liftIO (localTimeUnwrap <$> localDateCurrent)
-     case peopleData of
-       Right ps -> return (peopleFromDs currentDate ps)
-       Left _   -> throwError err503 {errBody = "Couldn't parse CSV."}
-     :<|> do
-    sheetUrl <- liftIO $ getEnv "SHEET_URL"
-    people <- liftIO $ newParseCsv sheetUrl
-    case people of
-      Right ps -> return ps
-      Left _   -> throwError err503 {errBody = "Couldn't parse CSV."}
+server1 = do
+  peopleData <- liftIO fetchAndParseForNow
+  case peopleData of
+    Right ps -> return ps
+    Left _   -> throwError err503 {errBody = "Couldn't parse CSV."}
 
 peopleApi :: Proxy PeopleApi
 peopleApi = Proxy

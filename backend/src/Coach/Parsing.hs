@@ -1,7 +1,6 @@
 module Coach.Parsing where
 
 import           Data.Hourglass
-import           Data.List       (transpose)
 import           Data.List.Split (splitOn)
 import           Data.Map.Strict (Map, fromListWith)
 import           Data.Text       (Text, pack)
@@ -11,8 +10,6 @@ import qualified Text.CSV        as CSV
 import           Text.Parsec     (ParseError)
 
 type CSVResult = Either ParseError PeopleData
-
-type NewCSVResult = Either ParseError [[String]]
 
 type PeopleData = Map Person [Activity]
 
@@ -28,19 +25,6 @@ parseAndProcess :: String -> String -> CSVResult
 parseAndProcess url s =
   parseCSV <$>
   trace ("parsing csv: of " ++ s ++ " from : " ++ url) CSV.parseCSV url s
-
-newProcess :: String -> String -> NewCSVResult
-newProcess url s = newParse <$> CSV.parseCSV url s
-
-newParse :: CSV.CSV -> [[String]]
-newParse csv = reverseChronological rows
-  where
-    reverseChronological (names:titles:events) = names : titles : reverse events
-    rows = bottomNameFirst <$> rows'
-      where
-        bottomNameFirst (label:people) = label : reverse people
-        rows' = withFirstCell (transpose (withFirstCell csv))
-        withFirstCell = filter (not . null . head)
 
 parseCSV :: CSV.CSV -> PeopleData
 parseCSV rows =
