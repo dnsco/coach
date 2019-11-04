@@ -14,9 +14,6 @@ jobs:
             - coach-v1-{{ checksum "stack.yaml" }}-{{ checksum "backend/package.yaml" }}
             - coach-v1-{{ checksum "stack.yaml" }}
       - run:
-          name: Allow Newer Stack Dependencies
-          command: 'touch ~/.stack/config.yaml && echo "allow-newer: true" > ~/.stack/config.yaml'
-      - run:
           name: Resolve/Update Dependencies
           command: cd backend; stack --no-terminal setup;
       - run:

@@ -7,7 +7,8 @@ packages:
 - backend
 
 extra-deps:
-  - twilio-0.3.0.0
+  - git: https://github.com/dnsco/twilio-haskell
+    commit: 31b3198c80c3708985e54baf4ac99c3077ed3b64
 
 # Override default flag values for local packages and extra-deps
 # flags: {}

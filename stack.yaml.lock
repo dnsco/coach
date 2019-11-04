@@ -5,12 +5,19 @@
 
 packages:
 - completed:
-    hackage: twilio-0.3.0.0@sha256:155b6780dd90f1835172f1651aec9caf008f9359317629fb7e39ac07d37c7870,5892
+    cabal-file:
+      size: 5890
+      sha256: c246de3f46c7d6eec6ed0b267f9c8a4afc729ecb76578946e810d9fd1ef94efb
+    name: twilio
+    version: 0.3.0.0
+    git: https://github.com/dnsco/twilio-haskell
     pantry-tree:
-      size: 4592
-      sha256: 87532151af7bb7de8fd3016e3f59112b28bbe7211d842e58604b2daaded29122
+      size: 4958
+      sha256: 56359fd90f362855964557f686b76ce5bb9fca6a6da830143f916bd02fa2e1e7
+    commit: 31b3198c80c3708985e54baf4ac99c3077ed3b64
   original:
-    hackage: twilio-0.3.0.0
+    git: https://github.com/dnsco/twilio-haskell
+    commit: 31b3198c80c3708985e54baf4ac99c3077ed3b64
 snapshots:
 - completed:
     size: 523700
