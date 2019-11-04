@@ -1,4 +1,6 @@
-module ParsingSpec(spec) where
+module ParsingSpec
+  ( spec
+  ) where
 
 import           Control.Exception.Base (evaluate)
 import           Data.Map.Strict        as Map
@@ -17,7 +19,8 @@ spec = do
       ((csvRowCount >) <$> mapEntryCount) `shouldBe` Just True
       mapEntryCount `shouldBe` (Just 2 :: Maybe Int)
     it "Handles Blank Rows" $ do
-      let emptyCsvLength = evaluate (length (parseCsv' (unlines [",,,", ",,,,"])))
+      let emptyCsvLength =
+            evaluate (length (parseCsv' (unlines [",,,", ",,,,"])))
       emptyCsvLength `shouldReturn` 0
     context "Formatting people" $ do
       let people' = fromJust csvResult
@@ -61,4 +64,5 @@ rightToMaybe = either (const Nothing) Just
 type CoachCSVParser = String -> PeopleData
 
 parseCsv' :: CoachCSVParser
-parseCsv' csvStr = fromJust (rightToMaybe (parseAndProcess "/test/file/fake.csv" csvStr))
+parseCsv' csvStr =
+  fromJust (rightToMaybe (parseAndProcess "/test/file/fake.csv" csvStr))
