@@ -1,17 +1,33 @@
 module Coach.Messaging where
 
-import           Control.Monad.IO.Class (liftIO)
-import           Data.Text              (Text, pack)
-import           System.Environment     (getEnv)
+import           Data.Text          (Text, pack)
+import           System.Environment (getEnv)
 import           Twilio
-import           Twilio.Message         (Message)
+import           Twilio.Message     (Message)
 import           Twilio.Messages
 
-runSendMessage :: Text -> Text -> IO Message
-runSendMessage to message =
-  runTwilio' (getEnv "TWILIO_ACCOUNT_SID") (getEnv "TWILIO_AUTH_TOKEN") $ do
-    from <- pack <$> liftIO (getEnv "TWILIO_SENDER_NUMBER")
-    sendMessage from to message
+getTwilioEnv :: IO TwilioEnv
+getTwilioEnv = do
+  sid <- getEnv "TWILIO_ACCOUNT_SID"
+  token <- getEnv "TWILIO_AUTH_TOKEN"
+  sender <- getEnv "TWILIO_SENDER_NUMBER"
+  recipient <- getEnv "TWILIO_TEST_RECIPIENT"
+  return $ TwilioEnv sid token sender recipient
+
+data TwilioEnv =
+  TwilioEnv
+    { twiSid       :: String
+    , twiToken     :: String
+    , twiSender    :: String
+    , twiRecipient :: String
+    }
+
+runSendMessage :: IO TwilioEnv -> Text -> IO Message
+runSendMessage env message = do
+  let twilio = runTwilio' (twiSid <$> env) (twiToken <$> env)
+  from <- pack . twiSender <$> env
+  to <- pack . twiRecipient <$> env
+  twilio $ sendMessage from to message
 
 sendMessage :: Text -> Text -> Text -> Twilio Message
-sendMessage from' to' message' = post (PostMessage to' from' message' Nothing)
+sendMessage from to message = post $ PostMessage to from message Nothing

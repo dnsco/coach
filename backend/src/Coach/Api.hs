@@ -9,7 +9,7 @@ import           Servant
 import           System.Environment     (getEnv)
 import           System.Hourglass       (localDateCurrent)
 
-import           Coach.Messaging        (runSendMessage)
+import           Coach.Messaging        (getTwilioEnv, runSendMessage)
 import           Coach.Network          (parseCsvAt)
 import           Coach.Parsing          (delinquentOn)
 import qualified Coach.Parsing          as Coach
@@ -61,19 +61,14 @@ fetchAndParseForNow = do
   return (peopleFromDs date <$> csv)
 
 server1 :: Server PeopleApi
-server1 = servePeople :<|> makeCall
+server1 = servePeople :<|> liftIO makeCall
   where
-    servePeople :: Handler [Person]
     servePeople = do
       peopleData <- liftIO fetchAndParseForNow
       case peopleData of
         Right ps -> return ps
         Left _   -> throwError err503 {errBody = "Couldn't parse CSV."}
-    makeCall :: Handler String
-    makeCall = do
-      recipient <- pack <$> liftIO (getEnv "TWILIO_TEST_RECIPIENT")
-      message <- liftIO (runSendMessage recipient "YAAASS QUEEEN")
-      return (show message)
+    makeCall = show <$> runSendMessage getTwilioEnv "YAAASS QUEEEN"
 
 peopleApi :: Proxy PeopleApi
 peopleApi = Proxy
