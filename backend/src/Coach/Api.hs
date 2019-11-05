@@ -9,7 +9,7 @@ import           Servant
 import           System.Environment     (getEnv)
 import           System.Hourglass       (localDateCurrent)
 
-import           Coach.Messaging        (getTwilioEnv, runSendMessage)
+import           Coach.Messaging        (getTwilioEnv, sendMessage)
 import           Coach.Network          (parseCsvAt)
 import           Coach.Parsing          (delinquentOn)
 import qualified Coach.Parsing          as Coach
@@ -68,7 +68,7 @@ server1 = servePeople :<|> liftIO makeCall
       case peopleData of
         Right ps -> return ps
         Left _   -> throwError err503 {errBody = "Couldn't parse CSV."}
-    makeCall = show <$> runSendMessage getTwilioEnv "YAAASS QUEEEN"
+    makeCall = show <$> sendMessage getTwilioEnv "YAAASS QUEEEN"
 
 peopleApi :: Proxy PeopleApi
 peopleApi = Proxy

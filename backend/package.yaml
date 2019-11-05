@@ -63,6 +63,16 @@ executables:
       - -with-rtsopts=-N
     dependencies:
       - coach
+  coach-send-message:
+    main:                SendMessage.hs
+    source-dirs:         app
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+      - -main-is SendMessage
+    dependencies:
+      - coach
 
 tests:
   coach-test:

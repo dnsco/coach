@@ -22,12 +22,12 @@ data TwilioEnv =
     , twiRecipient :: String
     }
 
-runSendMessage :: IO TwilioEnv -> Text -> IO Message
-runSendMessage env message = do
+sendMessage :: IO TwilioEnv -> Text -> IO Message
+sendMessage env body = do
   let twilio = runTwilio' (twiSid <$> env) (twiToken <$> env)
   from <- pack . twiSender <$> env
   to <- pack . twiRecipient <$> env
-  twilio $ sendMessage from to message
+  twilio $ postMessage from to body
 
-sendMessage :: Text -> Text -> Text -> Twilio Message
-sendMessage from to message = post $ PostMessage to from message Nothing
+postMessage :: Text -> Text -> Text -> Twilio Message
+postMessage from to message = post $ PostMessage to from message Nothing
