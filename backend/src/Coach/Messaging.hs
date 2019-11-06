@@ -1,10 +1,16 @@
 module Coach.Messaging where
 
+import           Data.Hourglass     (DateTime)
 import           Data.Text          (Text, pack)
 import           System.Environment (getEnv)
 import           Twilio
 import           Twilio.Message     (Message)
 import           Twilio.Messages
+
+import           Coach.Parsing
+
+auditAndText :: DateTime -> Person -> PeopleData -> Maybe Bool
+auditAndText = undefined
 
 getTwilioEnv :: IO TwilioEnv
 getTwilioEnv = do

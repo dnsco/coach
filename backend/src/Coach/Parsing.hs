@@ -1,17 +1,20 @@
 module Coach.Parsing where
 
+import           Data.Aeson      (ToJSON)
 import           Data.Hourglass
 import           Data.List.Split (splitOn)
-import           Data.Map.Strict (Map, fromListWith)
+import qualified Data.Map.Strict as Map
 import           Data.Text       (Text, pack)
 import           Debug.Trace     (trace)
 import           GHC.Unicode     (isSpace)
+
+import           GHC.Generics    (Generic)
 import qualified Text.CSV        as CSV
 import           Text.Parsec     (ParseError)
 
 type CSVResult = Either ParseError PeopleData
 
-type PeopleData = Map Person [Activity]
+type PeopleData = Map.Map Person [Activity]
 
 type Activity = (ActivityName, [Event])
 
@@ -21,6 +24,25 @@ type ActivityName = Text
 
 type Person = Text
 
+data ApiPerson =
+  ApiPerson
+    { name       :: Text
+    , activities :: [ApiActivity]
+    }
+  deriving (Eq, Show, Generic)
+
+instance ToJSON ApiPerson
+
+data ApiActivity =
+  ApiActivity
+    { title        :: Text
+    , isDelinquent :: Bool
+    , events       :: [(Text, Text)]
+    }
+  deriving (Eq, Show, Generic)
+
+instance ToJSON ApiActivity
+
 parseAndProcess :: String -> String -> CSVResult
 parseAndProcess url s =
   parseCSV <$>
@@ -28,7 +50,7 @@ parseAndProcess url s =
 
 parseCSV :: CSV.CSV -> PeopleData
 parseCSV rows =
-  fromListWith (++) ((\(p, a) -> (p, [a])) <$> parseActivities rows)
+  Map.fromListWith (++) ((\(p, a) -> (p, [a])) <$> parseActivities rows)
 
 parseActivities :: CSV.CSV -> [(Person, Activity)]
 parseActivities rows =
@@ -61,3 +83,16 @@ delinquentOn now es =
   where
     today = dtDate now
     dateFinder d = d `elem` (fst <$> es)
+
+peopleFromSheet :: DateTime -> PeopleData -> [ApiPerson]
+peopleFromSheet date = Map.foldlWithKey (\ps k as -> ps ++ [toApi k as date]) []
+
+toApi :: Person -> [Activity] -> DateTime -> ApiPerson
+toApi k as date = ApiPerson k (toApiActivity <$> as)
+  where
+    toApiActivity :: Activity -> ApiActivity
+    toApiActivity (an, es) =
+      ApiActivity an (delinquentOn date es) (reverse (toApiEvent <$> es))
+    toApiEvent :: Event -> (Text, Text)
+    toApiEvent (date', description) =
+      (pack (timePrint ISO8601_Date date'), description)
