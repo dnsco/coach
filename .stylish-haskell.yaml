@@ -230,3 +230,4 @@ language_extensions:
   - DataKinds
   - TypeOperators
   - MultiParamTypeClasses
+  - LambdaCase

@@ -74,21 +74,17 @@ delinquentOn :: DateTime -> [Event] -> Bool
 delinquentOn now es =
   if todHour (dtTime now) > 1 -- hour is zero indexed, so padding till 2am
     then dateFinder today
-    else dateFinder
-           Date
-             { dateYear = dateYear today
-             , dateMonth = dateMonth today
-             , dateDay = dateDay today - 1
-             }
+    else dateFinder yesterday
   where
     today = dtDate now
-    dateFinder d = d `elem` (fst <$> es)
+    yesterday = today {dateDay = dateDay today - 1}
+    dateFinder d = d `notElem` (fst <$> es)
 
 peopleFromSheet :: DateTime -> PeopleData -> [ApiPerson]
-peopleFromSheet date = Map.foldlWithKey (\ps k as -> ps ++ [toApi k as date]) []
+peopleFromSheet date = Map.foldlWithKey (\ps k as -> ps ++ [toApi date k as]) []
 
-toApi :: Person -> [Activity] -> DateTime -> ApiPerson
-toApi k as date = ApiPerson k (toApiActivity <$> as)
+toApi :: DateTime -> Person -> [Activity] -> ApiPerson
+toApi date k as = ApiPerson k (toApiActivity <$> as)
   where
     toApiActivity :: Activity -> ApiActivity
     toApiActivity (an, es) =

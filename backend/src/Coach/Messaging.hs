@@ -1,16 +1,39 @@
 module Coach.Messaging where
 
 import           Data.Hourglass     (DateTime)
-import           Data.Text          (Text, pack)
+import qualified Data.Map.Strict    as Map
+import           Data.Text          (Text, intercalate, pack)
 import           System.Environment (getEnv)
 import           Twilio
 import           Twilio.Message     (Message)
 import           Twilio.Messages
 
+import           Coach.Network
 import           Coach.Parsing
+import           Debug.Trace        (trace)
 
-auditAndText :: DateTime -> Person -> PeopleData -> Maybe Bool
-auditAndText = undefined
+auditAndText' ::
+     IO TwilioEnv -> DateTime -> Person -> String -> IO (Maybe Message)
+auditAndText' env now person sheetUrl =
+  parseCsvAt sheetUrl >>= \case
+    Left _ -> return Nothing
+    Right ps' -> auditAndText env now person ps'
+
+auditAndText ::
+     IO TwilioEnv -> DateTime -> Person -> PeopleData -> IO (Maybe Message)
+auditAndText env now person people =
+  case Map.lookup person people of
+    Just as -> messageIfDelinquent as
+    Nothing -> return Nothing
+  where
+    messageIfDelinquent as =
+      case delinquentActivities as of
+        []  -> return Nothing
+        as' -> trace (show as') Just <$> sendMessage env (messageText as')
+    delinquentActivities as =
+      filter isDelinquent (activities (toApi now person as))
+    messageText as =
+      "step up your game with " <> intercalate ", " (title <$> as)
 
 getTwilioEnv :: IO TwilioEnv
 getTwilioEnv = do
