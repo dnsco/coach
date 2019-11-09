@@ -2,36 +2,33 @@ module Coach.Messaging where
 
 import           Data.Hourglass     (DateTime)
 import qualified Data.Map.Strict    as Map
+import           Data.Maybe         (fromJust)
 import           Data.Text          (Text, intercalate, pack)
 import           System.Environment (getEnv)
-import           Twilio
+import           Twilio             (Twilio, runTwilio')
 import           Twilio.Message     (Message)
-import           Twilio.Messages
+import           Twilio.Messages    (PostMessage (..), post)
 
 import           Coach.Network
 import           Coach.Parsing
-import           Debug.Trace        (trace)
 
 auditAndText' ::
      IO TwilioEnv -> DateTime -> Person -> String -> IO (Maybe Message)
 auditAndText' env now person sheetUrl =
   parseCsvAt sheetUrl >>= \case
-    Left _ -> return Nothing
+    Left e -> error $ "failed to parse csv at " <> sheetUrl <> ": " <> show e
     Right ps' -> auditAndText env now person ps'
 
 auditAndText ::
      IO TwilioEnv -> DateTime -> Person -> PeopleData -> IO (Maybe Message)
 auditAndText env now person people =
-  case Map.lookup person people of
-    Just as -> messageIfDelinquent as
-    Nothing -> return Nothing
+  case delinquentActivities $ fromJust activities' of
+    []  -> return Nothing
+    as' -> Just <$> sendMessage env (messageText as')
   where
-    messageIfDelinquent as =
-      case delinquentActivities as of
-        []  -> return Nothing
-        as' -> trace (show as') Just <$> sendMessage env (messageText as')
+    activities' = Map.lookup person people
     delinquentActivities as =
-      filter isDelinquent (activities (toApi now person as))
+      filter isDelinquent (activities $ toApi now person as)
     messageText as =
       "step up your game with " <> intercalate ", " (title <$> as)
 

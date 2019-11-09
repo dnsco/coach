@@ -5,7 +5,6 @@ import           Data.Hourglass
 import           Data.List.Split (splitOn)
 import qualified Data.Map.Strict as Map
 import           Data.Text       (Text, pack)
-import           Debug.Trace     (trace)
 import           GHC.Unicode     (isSpace)
 
 import           GHC.Generics    (Generic)
@@ -44,9 +43,7 @@ data ApiActivity =
 instance ToJSON ApiActivity
 
 parseAndProcess :: String -> String -> CSVResult
-parseAndProcess url s =
-  parseCSV <$>
-  trace ("parsing csv: of " ++ s ++ " from : " ++ url) CSV.parseCSV url s
+parseAndProcess url s = parseCSV <$> CSV.parseCSV url s
 
 parseCSV :: CSV.CSV -> PeopleData
 parseCSV rows =
