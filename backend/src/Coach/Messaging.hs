@@ -22,15 +22,14 @@ auditAndText' env now person sheetUrl =
 auditAndText ::
      IO TwilioEnv -> DateTime -> Person -> PeopleData -> IO (Maybe Message)
 auditAndText env now person people =
-  case delinquentActivities $ fromJust activities' of
-    []  -> return Nothing
-    as' -> Just <$> sendMessage env (messageText as')
+  case delinquentActivities $ fromJust (Map.lookup person people) of
+    [] -> return Nothing
+    as -> Just <$> sendMessage env (messageText as)
   where
-    activities' = Map.lookup person people
-    delinquentActivities as =
-      filter isDelinquent (activities $ toApi now person as)
-    messageText as =
-      "step up your game with " <> intercalate ", " (title <$> as)
+    delinquentActivities as = filter isDelinquent (activities' as)
+    activities' as = activities $ toApi now person as
+    messageText as' =
+      "step up your game with " <> intercalate ", " (title <$> as')
 
 getTwilioEnv :: IO TwilioEnv
 getTwilioEnv = do
