@@ -13,18 +13,23 @@ import           Coach.Network
 import           Coach.Parsing
 
 auditAndText' ::
-     IO TwilioEnv -> DateTime -> Person -> String -> IO (Maybe Message)
-auditAndText' env now person sheetUrl =
+     IO TwilioEnv -> Text -> DateTime -> Person -> String -> IO (Maybe Message)
+auditAndText' env recipNumber now person sheetUrl =
   parseCsvAt sheetUrl >>= \case
     Left e -> error $ "failed to parse csv at " <> sheetUrl <> ": " <> show e
-    Right ps' -> auditAndText env now person ps'
+    Right ps -> auditAndText env recipNumber now person ps
 
 auditAndText ::
-     IO TwilioEnv -> DateTime -> Person -> PeopleData -> IO (Maybe Message)
-auditAndText env now person people =
+     IO TwilioEnv
+  -> Text
+  -> DateTime
+  -> Person
+  -> PeopleData
+  -> IO (Maybe Message)
+auditAndText env recipient now person people =
   case delinquentActivities $ fromJust (Map.lookup person people) of
     [] -> return Nothing
-    as -> Just <$> sendMessage env (messageText as)
+    as -> Just <$> sendMessage env recipient (messageText as)
   where
     delinquentActivities as = filter isDelinquent (activities' as)
     activities' as = activities $ toApi now person as
@@ -36,22 +41,19 @@ getTwilioEnv = do
   sid <- getEnv "TWILIO_ACCOUNT_SID"
   token <- getEnv "TWILIO_AUTH_TOKEN"
   sender <- getEnv "TWILIO_SENDER_NUMBER"
-  recipient <- getEnv "TWILIO_TEST_RECIPIENT"
-  return $ TwilioEnv sid token sender recipient
+  return $ TwilioEnv sid token sender
 
 data TwilioEnv =
   TwilioEnv
-    { twiSid       :: String
-    , twiToken     :: String
-    , twiSender    :: String
-    , twiRecipient :: String
+    { twiSid    :: String
+    , twiToken  :: String
+    , twiSender :: String
     }
 
-sendMessage :: IO TwilioEnv -> Text -> IO Message
-sendMessage env body = do
+sendMessage :: IO TwilioEnv -> Text -> Text -> IO Message
+sendMessage env to body = do
   let twilio = runTwilio' (twiSid <$> env) (twiToken <$> env)
   from <- pack . twiSender <$> env
-  to <- pack . twiRecipient <$> env
   twilio $ postMessage from to body
 
 postMessage :: Text -> Text -> Text -> Twilio Message

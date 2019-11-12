@@ -8,6 +8,7 @@ import           Data.Maybe         (fromJust, isJust)
 
 import           Coach.Messaging
 import           Coach.Parsing      (parseDate)
+import           Data.Text          (pack)
 import           System.Environment (getEnv)
 import           Test.Hspec
 
@@ -24,16 +25,18 @@ spec = do
         sid <- getEnv "TWILIO_TEST_SID"
         token <- getEnv "TWILIO_TEST_TOKEN"
         sender <- getEnv "TWILIO_TEST_SENDER"
-        recipient <- getEnv "TWILIO_TEST_RECIPIENT"
-        return $ TwilioEnv sid token sender recipient
+        return $ TwilioEnv sid token sender
+      recipient' = pack <$> getEnv "TWILIO_TEST_RECIPIENT"
   describe "Auditing a person" $ do
     context "When they have delinquent activities" $ do
       let people = Map.singleton "Denny" [delinquentActivity, doneActivity]
       it "sends a text" $ do
-        response <- auditAndText twilio now "Denny" people
+        recipient <- recipient'
+        response <- auditAndText twilio recipient now "Denny" people
         response `shouldSatisfy` isJust
     context "When they are all good" $ do
       let people = Map.singleton "Denny" [doneActivity]
       it "doesn't send a text" $ do
-        let response = auditAndText twilio now "Denny" people
+        recipient <- recipient'
+        let response = auditAndText twilio recipient now "Denny" people
         response `shouldReturn` Nothing

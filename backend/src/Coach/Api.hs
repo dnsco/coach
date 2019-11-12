@@ -7,6 +7,7 @@ import           System.Environment     (getEnv)
 import           Coach.Messaging        (getTwilioEnv, sendMessage)
 import           Coach.Network          (fetchAndParseForNow)
 import           Coach.Parsing          (ApiPerson)
+import           Data.Text              (pack)
 
 type PeopleApi = RootEndpoint :<|> SendEndpoint
 
@@ -22,7 +23,9 @@ server1 = servePeople :<|> liftIO makeCall
       case peopleData of
         Right ps -> return ps
         Left _   -> throwError err503 {errBody = "Couldn't parse CSV."}
-    makeCall = show <$> sendMessage getTwilioEnv "YAAASS QUEEEN"
+    makeCall = do
+      recipient <- pack <$> getEnv "TWILIO_TEST_RECIPIENT"
+      show <$> sendMessage getTwilioEnv recipient "YAAASS QUEEEN"
 
 peopleApi :: Proxy PeopleApi
 peopleApi = Proxy
