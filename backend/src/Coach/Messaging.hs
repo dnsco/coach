@@ -33,8 +33,9 @@ auditAndText env recipient now person people =
   where
     delinquentActivities as = filter isDelinquent (activities' as)
     activities' as = activities $ toApi now person as
-    messageText as' =
-      "step up your game with " <> intercalate ", " (title <$> as')
+    titles as = intercalate ", " (title <$> as)
+    messageText as =
+      "Babe how you doin' with " <> titles as <> "? https://bitchdidyou.com"
 
 getTwilioEnv :: IO TwilioEnv
 getTwilioEnv = do
